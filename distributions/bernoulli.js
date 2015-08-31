@@ -7,6 +7,16 @@ module.exports = function(p) {
 	
 	mean: p,
 	
-	variance: (1 - p) * p	
+	variance: (1 - p) * p,
+	
+	cdf: function(x) {
+		if (x < 0) {
+			return 0;
+		} else if (0 <= x && x < 1) {
+			return 1 - p;
+		} else {
+			return 1;
+		}
+	}
   });
 };

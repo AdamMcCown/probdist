@@ -35,6 +35,20 @@ module.exports = function(probs) {
 	
 	mean: expectedValue,
 	
-	variance: variance
+	variance: variance,
+	
+	cdf: function (x) {
+		if (allValuesNumbers) {
+			var sum = 0;
+			for (val in probs) {
+				if (probs.hasOwnProperty(val) && parseFloat(val, 10) <= x) {
+					 sum += parseFloat(probs[val], 10);
+				}
+			}
+			return sum;
+		} else {
+			return undefined; //OR the pdf
+		}
+	}
   });
 };

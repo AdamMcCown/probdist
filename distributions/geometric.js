@@ -15,12 +15,8 @@ function generateRandomGeometric(p, shifted) {
 * @param {Boolean} shifted false for 1 indexed shifted true for 0 indexed
 */	
 module.exports = function(p, shifted) {
-	var cache = {};
-	shifted = shifted || false;
-	cache[0] = shifted ? p : 0;
-	
-	return distribution({	
-		pdf: function(k) {
+	var cache = {},
+		pdf = function (k) {
 			if (k !== parseInt(k) || k < 0) {
 				return 0;
 			}
@@ -32,7 +28,12 @@ module.exports = function(p, shifted) {
 					Math.pow(1 - p, k - 1) * p;
 				return cache[k];
 			}
-		},
+		};
+	shifted = shifted || false;
+	cache[0] = shifted ? p : 0;
+	
+	return distribution({	
+		pdf: pdf,
 		
 		sample: function(n) {
 			var r = [];
@@ -44,6 +45,19 @@ module.exports = function(p, shifted) {
 		
 		mean: shifted ? (1 - p) / p : 1 / p,
 		
-		variance: (1 - p) / Math.pow(p, 2)
+		variance: (1 - p) / Math.pow(p, 2),
+		
+		cdf: function (x) {
+			if (x === Infinity) {
+				return 1;
+			} else {				
+				var sum = 0,
+					i;
+				for (i = 0; i <= x; i += 1) {
+					sum += pdf(i);
+				}
+				return sum;
+			}
+		}
 	});
 };

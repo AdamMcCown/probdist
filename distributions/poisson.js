@@ -34,13 +34,23 @@ function knuthPoissonSample(lambda) {
 }
 
 module.exports = function (lambda) {
-  var sampleOne = knuthPoissonSample(lambda);
+  var sampleOne = knuthPoissonSample(lambda),
+	  exp_negative_lambda = Math.exp(-lambda),
+	  cache = {},
+	  pdf = function (k) {
+		if (k !== parseInt(k) || k < 0) {
+			return 0;
+		}
+		if (k in cache) {
+			return cache[k];
+		} else {
+			cache[k] = (Math.pow(lambda, k) * exp_negative_lambda) / factorial(k);
+			return cache[k];
+		}
+	  };
 
   return distribution({
-    pdf : function (k) {
-      k = Math.round(k);
-      return (Math.pow(lambda, k) * Math.exp(-k)) / factorial(k);
-    },
+    pdf : pdf,
 
     sample: function (n) {
       var r = [];
@@ -52,6 +62,19 @@ module.exports = function (lambda) {
 	
 	mean: lambda,
 	
-	variance: lambda
+	variance: lambda,
+	
+	cdf: function (x) {
+		if (x === Infinity) {
+			return 1;
+		} else {				
+			var sum = 0,
+				i;
+			for (i = 0; i <= x; i += 1) {
+				sum += pdf(i);
+			}
+			return sum;
+		}
+	}
   });
 };

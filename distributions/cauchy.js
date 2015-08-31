@@ -16,6 +16,16 @@ module.exports = function(x0, lambda) {
 		
 		mean: undefined,
 		
-		variance: undefined
+		variance: undefined,
+		
+		cdf: function (x) {
+			if (x === -Infinity) {
+				return 0;
+			} else if (x === Infinity) {
+				return 1;
+			} else {
+				return (1 / Math.PI) * Math.atan((x - x0) / lambda) + 0.5;
+			}
+		}
 	});
 };

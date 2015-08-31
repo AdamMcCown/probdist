@@ -11,6 +11,16 @@ module.exports = function(lambda) {
 		
 		mean: 1 / lambda,
 		
-		variance: 1 / (lambda * lambda)
+		variance: 1 / (lambda * lambda),
+		
+		cdf: function (x) {
+			if (x < 0) {
+				return 0;
+			} else if (x === Infinity) {
+				return 1;
+			} else {
+				return 1 - Math.exp(-lambda * x);
+			}
+		}
 	});
 };

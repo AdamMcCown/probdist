@@ -27,6 +27,16 @@ module.exports = function (min, max) {
 	
 	mean: (min + max) / 2,
 	
-	variance: Math.pow(max - min, 2) / 12
+	variance: Math.pow(max - min, 2) / 12,
+	
+	cdf: function (x) {
+		if (x < min) {
+			return 0;
+		} else if (x > max) {
+			return 1;
+		} else {
+			return (x - min) / interval;
+		}
+	}
   };
 };

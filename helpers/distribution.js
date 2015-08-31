@@ -67,6 +67,7 @@ module.exports = function(d) {
         pdf    : pdf,
         sample : sample,
 		mean   : d.mean,
-		variance : d.variance
+		variance : d.variance,
+		cdf: d.cdf
     };
 };

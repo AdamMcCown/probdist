@@ -19,6 +19,18 @@ module.exports = function(n, p) {
 		
 		mean: n * p,
 		
-		variance: n * p * (1 - p)
+		variance: n * p * (1 - p),
+		
+		cdf: function (x) {
+			if (x >= n) {
+				return 1;
+			} else {
+				var sum = 0;
+				for (k = 0; k <= x; k += 1) {
+					sum += pdf[k];
+				}
+				return sum;
+			}
+		}
 	});
 };

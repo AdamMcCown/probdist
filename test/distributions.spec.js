@@ -496,7 +496,7 @@ describe('Distributions', function() {
 	assert.equal(distribution.variance, 2 / (9*4));
   });
   
-  it('Beta cdf', function () {
+  it('Beta CDF', function () {
 	 var distribution = distributions.beta(0.5, 0.5);
 	 
 	 assert.equal(distribution.cdf(-1), 0);

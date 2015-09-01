@@ -40,8 +40,7 @@ module.exports = function (lambda) {
 	  pdf = function (k) {
 		if (k !== parseInt(k) || k < 0) {
 			return 0;
-		}
-		if (k in cache) {
+		} else if (k in cache) {
 			return cache[k];
 		} else {
 			cache[k] = (Math.pow(lambda, k) * exp_negative_lambda) / factorial(k);

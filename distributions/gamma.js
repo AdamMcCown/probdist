@@ -1,17 +1,17 @@
 
 var distribution = require('../helpers/distribution');
 var gamma = require('../helpers/gamma');
-var quadrature = require('../helpers/quadrature');
+var lowerIncompleteGamma = require('../helpers/lowerIncompleteGamma');
 
 module.exports = function(alpha, beta) {
   var gamma_alpha = gamma(alpha);
-  var pdf = function(x) {
-    return x > 0 ?
-			(Math.pow(beta, -alpha) * Math.pow(x, alpha-1) * Math.exp(-x / beta)) /
-            gamma_alpha : 0;
-  };
+  
   return distribution({
-    pdf: pdf,
+    pdf: function(x) {
+		return x > 0 ?
+				(Math.pow(beta, -alpha) * Math.pow(x, alpha-1) * Math.exp(-x / beta)) /
+				gamma_alpha : 0;
+	},
 	
 	mean: alpha * beta,
 	
@@ -23,7 +23,7 @@ module.exports = function(alpha, beta) {
 		} else if (x === Infinity) {
 			return 1;
 		} else {
-			return quadrature(pdf, 0, x);
+			return lowerIncompleteGamma(alpha, x / beta) / gamma(alpha);
 		}
 	}
   });

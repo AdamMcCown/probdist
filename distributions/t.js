@@ -1,15 +1,11 @@
 
 var distribution = require('../helpers/distribution');
 var beta = require('../helpers/beta');
-var quadrature = require('../helpers/quadrature');
+var lowerIncompeteBeta = require('../helpers/lowerIncompeteBeta');
 
 module.exports = function(nu) {
   var beta_term = Math.sqrt(nu) * beta(nu / 2, 0.5),
-	  variance,
-	  pdf = function (t) {
-		return (Math.pow(nu / (Math.pow(t, 2) + nu), (nu + 1) / 2)) /
-				beta_term;
-	  };
+	  variance;
   if (nu > 2) {
 	  variance = nu / (nu - 2);
   } else if (1 < nu && nu <= 2) {
@@ -19,19 +15,31 @@ module.exports = function(nu) {
   }
   
   return distribution({
-    pdf: pdf,
+    pdf: function (t) {
+		return (Math.pow(nu / (Math.pow(t, 2) + nu), (nu + 1) / 2)) /
+				beta_term;
+	},
 	
 	mean: nu > 1 ? 0 : undefined,
 	
 	variance: variance,
 	
-	cdf: function (x) {
-		if (x === -Infinity) {
+	cdf: function (t) {
+		var denom = beta(nu / 2, 0.5);
+		if (t === -Infinity) {
 			return 0;
-		} else if (x === Infinity) {
+		} else if (t === Infinity) {
 			return 1;
 		} else {
-			return quadrature(pdf, -Infinity, x, {intervals: 100000});
+			var num = 1 - 0.5 * lowerIncompeteBeta(nu / (Math.pow(t, 2) + nu), nu / 2, 0.5) / 
+				denom;
+			if (t > 0) {
+				return num;
+			} else if (t < 0) {
+				return 1 - num;
+			} else {
+				return 0.5;
+			}
 		}
 	}
   });
